@@ -173,6 +173,10 @@ int main()
             break;
         case 4: setGoal(map);
             break;
+        case 8: map.display();
+            break;
+        case 9: cout << "Terminating the program!";
+            break;
 		}
 	} while (ch != 9);
 }

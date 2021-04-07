@@ -5,18 +5,16 @@ class Location
 {
 	bool left, right, up, down; //variables to store the neighboring locations
 	int Xcord, Ycord; //coordinates of the location
-	char status; //sets the status based on whether the location is visited
 	int prevX, prevY; //stores the previous x and y values in a searching algorithm
-	char name;
-	bool start, goal;
-	int cost;
+	char name; //variable to hold the name and/or status of the location
+	bool start, goal; //variables to hold whether the location is the start or goal
+	int cost; //cost of traversing through the location
 public:
 	Location(bool l = false, bool r = false, bool u = false, bool d = false, char n = ' ', int c = 0)
 		: left(l), right(r), up(u), down(d), name(n), cost(c) 
 	{
 		Xcord = 0;
 		Ycord = 0;
-		status = ' ';
 		prevX = 0;
 		prevY = 0;
 		start = false;
