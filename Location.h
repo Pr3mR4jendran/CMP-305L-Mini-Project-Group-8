@@ -28,7 +28,6 @@ public:
 		down = L.down;
 		Xcord = L.Xcord;
 		Ycord = L.Ycord;
-		status = L.status;
 		prevX = L.prevX;
 		prevY = L.prevY;
 		name = L.name;
