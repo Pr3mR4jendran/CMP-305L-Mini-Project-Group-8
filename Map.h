@@ -94,5 +94,13 @@ public:
 				return true;
 			}
 			currentlocation->setStatus('.'); 
+		if   (currentlocation->getDown() == false && (grid[currentlocation->getYcord() + 1][currentlocation->getXcord()]).getStatus() != '.')
+				
+			{
+				stk.push(&grid[currentlocation->getY() + 1][(currentlocation->getX())]);
+				grid[currentlocation->getY() + 1][(currentlocation->getX())].setPrev(currentlocation);
+			}
+		//I am not sure of the if condition for pushing into stack 
+
 			
 };
