@@ -6,6 +6,7 @@ class Map
 {
 	vector<vector<Location*>> grid; //matrix grid of locations
 	int rows, cols; //dimensions of the grid
+	
 public:
 	Map(int r = 0, int c = 0)
 	{
@@ -78,4 +79,20 @@ public:
 	{
 		return grid;
 	}
+	bool DFS()
+	{ Location* currentlocation;
+	 Location startlocation, goallocation;
+		stack<Location*> stk;
+		stk.push(&startlocation); 
+		while (!stk.empty()) 
+		{
+			currentlocation = stk.top(); 
+			stk.pop();
+			if (goallocation.getGoal() == currentLocation->getGoal())
+			{
+				Success(currentLocation);
+				return true;
+			}
+			currentlocation->setStatus('.'); 
+			
 };
