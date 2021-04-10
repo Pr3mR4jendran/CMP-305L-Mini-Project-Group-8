@@ -1,5 +1,4 @@
 #pragma once
-#include<string>
 using namespace std;
 class Location
 {
@@ -9,6 +8,8 @@ class Location
 	char name; //variable to hold the name and/or status of the location
 	bool start, goal; //variables to hold whether the location is the start or goal
 	int cost; //cost of traversing through the location
+	Location* prev; //a pointer to the previous location
+	bool visited;
 public:
 	Location(bool l = false, bool r = false, bool u = false, bool d = false, char n = ' ', int c = 0)
 		: left(l), right(r), up(u), down(d), name(n), cost(c) 
@@ -19,6 +20,8 @@ public:
 		prevY = 0;
 		start = false;
 		goal = false;
+		prev = nullptr;
+		visited = false;
 	}
 	Location(const Location& L)
 	{
@@ -34,68 +37,85 @@ public:
 		cost = L.cost;
 		start = L.start;
 		goal = L.goal;
+		prev = L.prev;
+		visited = L.visited;
 	}
-	bool getStart()
+	bool getStart() const
 	{
 		return start;
 	}
-	void setStart()
+	void setStart(bool b = true)
 	{
-		start = true;
+		start = b;
 	}
-	bool getGoal()
+	bool getGoal() const
 	{
 		return goal;
 	}
-	void setGoal()
+	void setGoal(bool b = true)
 	{
-		goal = true;
+		goal = b;
 	}
-	char getName()
+	char getName() const
 	{
 		return name;
 	}
-	bool getUp()
+	void setName(char n = ' ')
+	{
+		name = n;
+	}
+	bool getUp() const
 	{
 		return up;
 	}
-	bool getDown()
+	bool getDown() const
 	{
 		return down;
 	}
-	bool getLeft()
+	bool getLeft() const
 	{
 		return left;
 	}
-	bool getRight()
+	bool getRight() const
 	{
 		return right;
 	}
-	friend ostream& operator<<(ostream& out, const Location& L)
+	void setPrev(Location* p)
 	{
-		cout << "+";
-		if (L.up)
-			cout << "   ";
-		else
-			cout << "---";
-		cout << "+";
-		cout << endl;
-		if (L.left)
-			cout << " ";
-		else
-			cout << "|";
-		cout << L.name << "  ";
-		if (L.right)
-			cout << " ";
-		else
-			cout << "|";
-		cout << endl;
-		cout << "+";
-		if (L.down)
-			cout << "   ";
-		else
-			cout << "---";
-		cout << "+";
-		return out;
+		prev = p;
+	}
+	Location* getPrev() const
+	{
+		return prev;
+	}
+	void setX(int x)
+	{
+		Xcord = x;
+	}
+	int getX() const
+	{
+		return Xcord;
+	}
+	void setY(int y)
+	{
+		Ycord = y;
+	}
+	int getY() const
+	{
+		return Ycord;
+	}
+	void setVisited(bool b = true)
+	{
+		visited = b;
+		if (this->getName() == ' ')
+			this->setName('.');
+	}
+	bool Visited() const
+	{
+		return visited;
+	}
+	int getCost() const
+	{
+		return cost;
 	}
 };

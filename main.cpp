@@ -4,6 +4,7 @@
 #include <stack>
 #include <queue>
 #include <string>
+
 using namespace std;
 
 void menu()
@@ -20,8 +21,7 @@ void menu()
 	cout << "9. Quit" << endl;
 }
 
-//reads map and loads it into an appropriate data structure
-void readFile(Map& M) 
+bool readFile(Map& M) 
 {
     string fname;
     cout << "\nEnter the name of the map you wish to open : ";
@@ -30,11 +30,18 @@ void readFile(Map& M)
     ifstream in(fname);
     if (in.fail()) 
     {
-        cout << "\nError: Couldn't open" << fname << "!!" << endl;
-        return;
+        cout << "\nError: Couldn't open " << fname << "!!" << endl;
+        return false;
     }
     else 
     {
+        for (int i = 0; i < M.Rows(); i++)
+        {
+            for (int j = 0; j < M.Cols(); j++)
+            {
+                delete M.getGrid()[i][j];
+            }
+        }
         vector<Location*> rows;
         char str1[100], str2[100], str3[100];
         in.getline(str1, 100);
@@ -47,7 +54,6 @@ void readFile(Map& M)
             int i = 0, j = 0, k = 1, cost = -1, cell = 0, row = 0, col = 0;
             char name = ' ';
             bool up, down, right, left;
-            //cout << "line " << line << endl;
 
             if (line != 1) 
             {
@@ -94,31 +100,18 @@ void readFile(Map& M)
 
                 Location *temp = new Location(left, right, up, down, name, cost);
                 rows.push_back(temp);
-
-                //cout << "cell = " << cell++ << endl;
-                //cout << "above: " << up << "\t";
-                //cout << "below: " << down << endl;
-                //cout << "right: " << right << "\t";
-                //cout << "left: " << left << endl;
-                //cout << "cost: " << cost << endl;
-                //cout << "name: " << name << endl;
-                //cout << endl << endl;
-
             }
 
             M.push_line(rows);
             rows.clear();
-            //cout << str1 << endl;
-            //cout << str2 << endl;
-            //cout << str3 << endl;
-
             line++;
         }
         cout << "\nMap read successfully\n" << endl;
+        return true;
     }
 }
 
-void setStart(Map& M)
+bool setStart(Map& M)
 {
     char set;
     cout << "\nPlease enter the location you would like to set as the start : ";
@@ -127,16 +120,25 @@ void setStart(Map& M)
     {
         for (int j = 0; j < M.Cols(); j++)
         {
+            if (M.getGrid()[i][j]->getStart())
+            {
+                M.getGrid()[i][j]->setStart(false);
+            }
             if (M.getGrid()[i][j]->getName() == set)
             {
-                M.getGrid()[i][j]->setStart();
+                M.getGrid()[i][j]->setStart(true);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
     cout << endl;
 }
 
-void setGoal(Map& M)
+bool setGoal(Map& M)
 {
     char set;
     cout << "\nPlease enter the location you would like to set as the goal : ";
@@ -145,9 +147,18 @@ void setGoal(Map& M)
     {
         for (int j = 0; j < M.Cols(); j++)
         {
+            if (M.getGrid()[i][j]->getGoal())
+            {
+                M.getGrid()[i][j]->setGoal(false);
+            }
             if (M.getGrid()[i][j]->getName() == set)
             {
-                M.getGrid()[i][j]->setGoal();
+                M.getGrid()[i][j]->setGoal(true);
+                return true;
+            }
+            else 
+            {
+                return false;
             }
         }
     }
@@ -158,6 +169,7 @@ int main()
 {
 	int ch;
     Map map;
+    bool start_set = false, goal_set = false, path_found = false, file_loaded = false;
 	do
 	{
 		menu();
@@ -165,18 +177,92 @@ int main()
 		cin >> ch;
 		switch (ch)
 		{
-        case 1: readFile(map);
+        case 1: file_loaded = readFile(map);
+            map.setXY();
 			break;
-        case 2: map.display();
+        case 2: 
+            if (file_loaded)
+            {
+                cout << endl;
+                map.display();
+            }
+            else
+            {
+                cout << "\nNo file has been loaded!" << endl;
+            }
             break;
-        case 3: setStart(map);
+        case 3: 
+            if (file_loaded)
+            {
+                start_set = setStart(map);
+                map.setStart();
+            }
+            else
+            {
+                cout << "\nNo file has been loaded!" << endl;
+            }
             break;
-        case 4: setGoal(map);
+        case 4: 
+            if (file_loaded)
+            {
+                goal_set = setGoal(map);
+                map.setGoal();
+            }
+            else
+            {
+                cout << "\nNo file has been loaded!" << endl;
+            }
             break;
-        case 8: map.display();
+        case 5: 
+            if (start_set and goal_set)
+            {
+                cout << endl;
+                map.DFS();
+                path_found = true;
+            }
+            else
+            {
+                cout << "\nNo starting and/or goal location has been set!" << endl;
+            }
             break;
-        case 9: cout << "Terminating the program!";
+        case 6: 
+            if (start_set and goal_set)
+            {
+                cout << endl;
+                map.BFS();
+                path_found = true;
+            }
+            else
+            {
+                cout << "\nNo starting and/or goal location has been set!" << endl;
+            }
             break;
+        case 7: 
+            if (start_set and goal_set)
+            {
+                cout << endl;
+                map.DA();
+                path_found = true;
+            }
+            else
+            {
+                cout << "\nNo starting and/or goal location has been set!" << endl;
+            }
+            break;
+        case 8: 
+            if (path_found)
+            {
+                cout << endl;
+                map.display();
+            }
+            else
+            {
+                cout << "\nNo path has been found!" << endl;
+            }
+            break;
+        case 9: cout << "\nTerminating the program!" << endl;
+            break;
+        default:cout << "\nInvalid choice!! Please re-enter!!" << endl;
 		}
 	} while (ch != 9);
 }
