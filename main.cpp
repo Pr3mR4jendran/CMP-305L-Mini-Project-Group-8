@@ -129,12 +129,9 @@ bool setStart(Map& M)
                 M.getGrid()[i][j]->setStart(true);
                 return true;
             }
-            else
-            {
-                return false;
-            }
         }
     }
+    return false;
     cout << endl;
 }
 
@@ -156,12 +153,9 @@ bool setGoal(Map& M)
                 M.getGrid()[i][j]->setGoal(true);
                 return true;
             }
-            else 
-            {
-                return false;
-            }
         }
     }
+    return false;
     cout << endl;
 }
 
